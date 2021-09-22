@@ -1,3 +1,15 @@
+# EmptyError Minimal Repro
+
+Provides a minimal repro for https://github.com/nestjs/nest/issues/8111
+
+To test:
+
+```
+$ yarn
+$ yarn test
+```
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
