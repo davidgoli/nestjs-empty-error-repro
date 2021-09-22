@@ -1,5 +1,8 @@
 import {
+  ArgumentsHost,
   CallHandler,
+  Catch,
+  ExceptionFilter,
   ExecutionContext,
   mixin,
   NestInterceptor,
@@ -7,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { NextFunction, Response } from 'express';
 import proxy from 'express-http-proxy';
-import { catchError, Observable, of, switchMap } from 'rxjs';
+import { catchError, EmptyError, Observable, of, switchMap } from 'rxjs';
 import { getRawBody } from './bodyParser';
 
 type ProxyArgs = Parameters<typeof proxy>;
@@ -16,6 +19,17 @@ type ProxyHost = ProxyArgs[0];
 export interface ProxyOptions extends proxy.ProxyOptions {
   url?: string;
   enableTracing?: boolean;
+}
+
+@Catch(EmptyError)
+export class EmptyErrorFilter implements ExceptionFilter {
+  catch(exception: Error, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    console.error({ exception });
+
+    response.end();
+  }
 }
 
 /**

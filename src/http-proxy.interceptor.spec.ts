@@ -1,18 +1,22 @@
 // eslint-disable-next-line max-classes-per-file
-import { Controller, Get, HttpServer } from '@nestjs/common';
+import { Controller, Get, HttpServer, UseFilters } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Test } from '@nestjs/testing';
 import nock from 'nock';
 import request from 'supertest';
 
-import { HttpProxy, ProxyOptions } from './http-proxy.interceptor';
+import {
+  EmptyErrorFilter,
+  HttpProxy,
+  ProxyOptions,
+} from './http-proxy.interceptor';
 
 const backendUrl = 'http://test.example.org';
 
 @Controller()
 class TestController {
   @Get('/test')
-  // @UseFilters(new EmptyErrorFilter())
+  @UseFilters(new EmptyErrorFilter())
   @HttpProxy()
   getTest(): ProxyOptions {
     return {
